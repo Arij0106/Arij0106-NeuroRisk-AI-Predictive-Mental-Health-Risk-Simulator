@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk2Reality · Transform Psychology → Predictive Health Simulation</title>
+    <meta name="description"
+        content="Risk2Reality: AI-powered mental health risk prediction. Transform psychological patterns into future mental health risk forecasts.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        /* ========== RESET & BASE ========== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.07);
+            --text-primary: #e8eaf0;
+            --text-secondary: #8b92a8;
+            --accent-blue: #4a7cff;
+            --accent-purple: #a855f7;
+            --accent-teal: #2dd4bf;
+            --accent-rose: #f43f5e;
+            --accent-amber: #f59e0b;
+            --accent-green: #22c55e;
+            --gradient-main: linear-gradient(135deg, #4a7cff, #a855f7);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 20% 50%, rgba(74, 124, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(45, 212, 191, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .header .logo {
+            font-size: 2.6rem;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .header .tagline {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            margin-top: 8px;
+            font-weight: 400;
+        }
+
+        /* ========== CARDS ========== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius);
+            padding: 36px;
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            margin-bottom: 28px;
+        }
+
+        .card:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ========== PROGRESS BAR ========== */
+        #progressSection {
+            margin-bottom: 28px;
+        }
+
+        .progress-bar-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 100px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--gradient-main);
+            border-radius: 100px;
+            transition: width 0.4s ease;
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        /* ========== FORM INPUTS ========== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(74, 124, 255, 0.15);
+        }
+
+        .form-group select option {
+            background: #1a1e2e;
+        }
+
+        /* ========== LIKERT ========== */
+        .likert-container {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .likert-option {
+            flex: 1;
+        }
+
+        .likert-option input {
+            display: none;
+        }
+
+        .likert-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 18px 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 700;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .likert-option label:hover {
+            background: rgba(74, 124, 255, 0.1);
+            border-color: rgba(74, 124, 255, 0.3);
+        }
+
+        .likert-option input:checked+label {
+            background: rgba(74, 124, 255, 0.15);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(74, 124, 255, 0.2);
+        }
+
+        .likert-desc {
+            font-size: 0.68rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            display: block;
+        }
+
+        /* ========== DOMAIN BADGE ========== */
+        .domain-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(74, 124, 255, 0.12);
+            border-radius: 100px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            margin-bottom: 16px;
+        }
+
+        /* ========== QUESTION TEXT ========== */
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 500;
+            line-height: 1.55;
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            padding: 13px 28px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-main);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 124, 255, 0.35);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 28px;
+        }
+
+        .btn-lg {
+            width: 100%;
+            justify-content: center;
+            padding: 16px;
+            font-size: 1.05rem;
+            margin-top: 12px;
+        }
+
+        /* ========== COMPLETION ========== */
+        .completion-card {
+            text-align: center;
+            padding: 60px 36px;
+        }
+
+        .completion-card .icon-wrap {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .completion-card h2 {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+
+        .completion-card p {
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+        }
+
+        /* ========== RESULTS DASHBOARD ========== */
+        .results-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .results-header h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .results-header p {
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .score-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .score-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-3px);
+        }
+
+        .score-card .score-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .score-card .score-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+
+        .score-card .score-severity {
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-top: 6px;
+            padding: 4px 12px;
+            border-radius: 100px;
+            display: inline-block;
+        }
+
+        .severity-normal {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--accent-green);
+        }
+
+        .severity-mild {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-amber);
+        }
+
+        .severity-moderate {
+            background: rgba(244, 63, 94, 0.15);
+            color: var(--accent-rose);
+        }
+
+        .severity-severe {
+            background: rgba(244, 63, 94, 0.25);
+            color: #ff6b81;
+        }
+
+        .severity-extremely-severe {
+            background: rgba(220, 38, 38, 0.25);
+            color: #ef4444;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 16px;
+        }
+
+        .relapse-gauge {
+            text-align: center;
+            padding: 32px;
+        }
+
+        .relapse-value {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .relapse-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .prevention-list {
+            list-style: none;
+        }
+
+        .prevention-list li {
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+            transition: var(--transition);
+        }
+
+        .prevention-list li:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .prevention-domain {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-blue);
+            margin-bottom: 6px;
+        }
+
+        .prevention-recommendation {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 640px) {
+            .wrapper {
+                padding: 24px 16px 60px;
+            }
+
+            .header .logo {
+                font-size: 2rem;
+            }
+
+            .score-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .likert-container {
+                flex-wrap: wrap;
+            }
+
+            .likert-option {
+                flex: 1 1 45%;
+            }
+
+            .card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo">Risk2Reality</div>
+            <div class="tagline">Transform psychological patterns into future mental health risk forecasts</div>
+        </div>
+
+        <!-- PROGRESS BAR -->
+        <div id="progressSection" class="hidden">
+            <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-meta">
+                <span id="questionCounter">Question 1 of 42</span>
+                <span id="domainBadge" class="domain-badge"></span>
+            </div>
+        </div>
+
+        <!-- DEMOGRAPHICS SECTION -->
+        <div id="demoSection" class="card">
+            <div class="card-title"><i class="fas fa-user-circle"></i> Your Demographics</div>
+
+            <div class="form-group">
+                <label for="ageInput">Age</label>
+                <input type="number" id="ageInput" value="25" min="10" max="100">
+            </div>
+
+            <div class="form-group">
+                <label for="genderInput">Gender</label>
+                <select id="genderInput">
+                    <option value="1">Male</option>
+                    <option value="0">Female</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="educationInput">Education Level</label>
+                <select id="educationInput">
+                    <option value="0">High School or Below</option>
+                    <option value="1">Undergraduate</option>
+                    <option value="2">Postgraduate</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="marriedInput">Marital Status</label>
+                <select id="marriedInput">
+                    <option value="0">Not Married</option>
+                    <option value="1">Married</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="medicalRecordInput">Medical Record Score (0–9)</label>
+                <select id="medicalRecordInput">
+                    <option value="0">0 — No significant history</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5" selected>5 — Moderate</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9 — Extensive history</option>
+                </select>
+            </div>
+
+            <button id="startBtn" class="btn btn-primary btn-lg">
+                Begin Assessment <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- QUESTIONNAIRE SECTION -->
+        <div id="questionnaireSection" class="card hidden">
+            <div id="questionText" class="question-text"></div>
+            <div id="likertOptions" class="likert-container"></div>
+            <div class="nav-buttons">
+                <button id="prevBtn" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Previous</button>
+                <button id="nextBtn" class="btn btn-primary">Next <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- COMPLETION SECTION -->
+        <div id="completionSection" class="card completion-card hidden">
+            <div class="icon-wrap">🧠</div>
+            <h2>Assessment Complete</h2>
+            <p>Your responses have been recorded. Click below to generate your AI-driven mental health risk forecast.
+            </p>
+            <button id="submitBtn" class="btn btn-primary btn-lg">
+                <i class="fas fa-chart-line"></i> Generate Risk Forecast
+            </button>
+        </div>
+
+        <!-- RESULTS SECTION -->
+        <div id="resultsSection" class="hidden">
+            <div class="results-header">
+                <h2>Your Risk Forecast</h2>
+                <p>AI-generated mental health projections based on DASS-21 analysis</p>
+            </div>
+
+            <div id="scoreCards" class="score-grid"></div>
+
+            <div class="card">
+                <div class="card-title"><i class="fas fa-chart-line"></i> Depression Trajectory (12 Weeks)</div>
+                <div class="chart-container">
+                    <canvas id="depressionChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><i class="fas fa-fire"></i> Burnout Probability (12 Weeks)</div>
+                <div class="chart-container">
+                    <canvas id="burnoutChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card relapse-gauge">
+                <div class="card-title" style="justify-content:center"><i class="fas fa-rotate-left"></i> Relapse
+                    Probability</div>
+                <div id="relapseValue" class="relapse-value">—</div>
+                <div class="relapse-label">Monte Carlo simulation (1,000 runs)</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><i class="fas fa-brain"></i> Cognitive Distortion Profile</div>
+                <div class="chart-container">
+                    <canvas id="distortionChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><i class="fas fa-shield-halved"></i> Prevention Plan</div>
+                <ul id="preventionList" class="prevention-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // ==================== 42 QUESTIONS ====================
+            const questions = [
+                // DASS-21 Stress items (1, 6, 8, 11, 12, 14, 18)
+                { text: "I found it hard to wind down.", domain: "Stress", icon: "fa-bolt" },
+                // DASS-21 Anxiety items (2, 4, 7, 9, 15, 19, 20)
+                { text: "I was aware of dryness of my mouth.", domain: "Anxiety", icon: "fa-heart-pulse" },
+                // DASS-21 Depression items (3, 5, 10, 13, 16, 17, 21)
+                { text: "I couldn't seem to experience any positive feeling at all.", domain: "Depression", icon: "fa-cloud-rain" },
+                { text: "I experienced breathing difficulty (e.g., excessively rapid breathing, breathlessness in the absence of physical exertion).", domain: "Anxiety", icon: "fa-heart-pulse" },
+                { text: "I found it difficult to work up the initiative to do things.", domain: "Depression", icon: "fa-cloud-rain" },
+                { text: "I tended to over-react to situations.", domain: "Stress", icon: "fa-bolt" },
+                { text: "I experienced trembling (e.g., in the hands).", domain: "Anxiety", icon: "fa-heart-pulse" },
+                { text: "I felt that I was using a lot of nervous energy.", domain: "Stress", icon: "fa-bolt" },
+                { text: "I was worried about situations in which I might panic and make a fool of myself.", domain: "Anxiety", icon: "fa-heart-pulse" },
+                { text: "I felt that I had nothing to look forward to.", domain: "Depression", icon: "fa-cloud-rain" },
+                { text: "I found myself getting agitated.", domain: "Stress", icon: "fa-bolt" },
+                { text: "I found it difficult to relax.", domain: "Stress", icon: "fa-bolt" },
+                { text: "I felt down-hearted and blue.", domain: "Depression", icon: "fa-cloud-rain" },
+                { text: "I was intolerant of anything that kept me from getting on with what I was doing.", domain: "Stress", icon: "fa-bolt" },
+                { text: "I felt I was close to panic.", domain: "Anxiety", icon: "fa-heart-pulse" },
+                { text: "I was unable to become enthusiastic about anything.", domain: "Depression", icon: "fa-cloud-rain" },
+                { text: "I felt I wasn't worth much as a person.", domain: "Depression", icon: "fa-cloud-rain" },
+                { text: "I felt that I was rather touchy.", domain: "Stress", icon: "fa-bolt" },
+                { text: "I was aware of the action of my heart in the absence of physical exertion (e.g., sense of heart rate increase, heart missing a beat).", domain: "Anxiety", icon: "fa-heart-pulse" },
+                { text: "I felt scared without any good reason.", domain: "Anxiety", icon: "fa-heart-pulse" },
+                { text: "I felt that life was meaningless.", domain: "Depression", icon: "fa-cloud-rain" },
+
+                // Additional behavioral/sleep/lifestyle questions (22–28)
+                { text: "I have experienced significant changes in my sleep patterns recently.", domain: "Sleep", icon: "fa-bed" },
+                { text: "I have difficulty concentrating on tasks I used to find easy.", domain: "Cognitive", icon: "fa-brain" },
+                { text: "I find myself withdrawing from social interactions.", domain: "Social", icon: "fa-users" },
+                { text: "I have noticed changes in my appetite or eating habits.", domain: "Lifestyle", icon: "fa-utensils" },
+                { text: "I feel physically fatigued even after adequate rest.", domain: "Physical", icon: "fa-person-walking" },
+                { text: "I have experienced unexplained physical symptoms (headaches, stomach aches).", domain: "Physical", icon: "fa-stethoscope" },
+                { text: "I find it hard to make decisions that used to be straightforward.", domain: "Cognitive", icon: "fa-brain" },
+
+                // Cognitive distortions (29–35)
+                { text: "I tend to imagine the worst-case scenario when something goes wrong.", domain: "Cognitive Distortion", icon: "fa-triangle-exclamation" },
+                { text: "I see things in all-or-nothing terms (completely good or completely bad).", domain: "Cognitive Distortion", icon: "fa-circle-half-stroke" },
+                { text: "I believe I can tell what others are thinking about me, and it's usually negative.", domain: "Cognitive Distortion", icon: "fa-eye" },
+                { text: "When something bad happens once, I expect it to keep happening.", domain: "Cognitive Distortion", icon: "fa-repeat" },
+                { text: "I blame myself for events that are outside my control.", domain: "Cognitive Distortion", icon: "fa-hand-point-left" },
+                { text: "I base my view of situations on how I feel rather than on facts.", domain: "Cognitive Distortion", icon: "fa-heart" },
+                { text: "I frequently tell myself I 'should' or 'must' do things a certain way.", domain: "Cognitive Distortion", icon: "fa-list-check" },
+
+                // Additional psychological scales (36–42)
+                { text: "I feel a sense of hopelessness about the future.", domain: "Depression", icon: "fa-cloud-rain" },
+                { text: "I experience sudden waves of intense fear or dread.", domain: "Anxiety", icon: "fa-heart-pulse" },
+                { text: "I feel emotionally numb or disconnected from my feelings.", domain: "Depression", icon: "fa-cloud-rain" },
+                { text: "I find it hard to control my worry once it starts.", domain: "Anxiety", icon: "fa-heart-pulse" },
+                { text: "I feel overwhelmed by my daily responsibilities.", domain: "Stress", icon: "fa-bolt" },
+                { text: "I have lost interest in activities I previously enjoyed.", domain: "Depression", icon: "fa-cloud-rain" },
+                { text: "I have had thoughts of harming myself or that life is not worth living.", domain: "Crisis", icon: "fa-phone" },
+            ];
+
+            const likertDescriptions = ['Not at all', 'Sometimes', 'Often', 'Most of the time'];
+            let responses = new Array(questions.length).fill(1);
+            let currentIndex = 0;
+            let demographics = {};
+
+            const progressFill = document.getElementById('progressFill');
+            const counterEl = document.getElementById('questionCounter');
+            const domainBadge = document.getElementById('domainBadge');
+            const questionText = document.getElementById('questionText');
+            const likertOptions = document.getElementById('likertOptions');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const startBtn = document.getElementById('startBtn');
+            const demoSection = document.getElementById('demoSection');
+            const questionnaireSection = document.getElementById('questionnaireSection');
+            const completionSection = document.getElementById('completionSection');
+            const resultsSection = document.getElementById('resultsSection');
+            const progressSection = document.getElementById('progressSection');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // ==================== LIKERT RENDERING ====================
+            function renderLikert(selected) {
+                let html = '';
+                for (let i = 1; i <= 4; i++) {
+                    html += `
+                        <div class="likert-option">
+                            <input type="radio" name="likert" id="opt${i}" value="${i}" ${selected === i ? 'checked' : ''}>
+                            <label for="opt${i}">
+                                ${i}
+                                <span class="likert-desc">${likertDescriptions[i - 1]}</span>
+                            </label>
+                        </div>`;
+                }
+                likertOptions.innerHTML = html;
+                document.querySelectorAll('input[name="likert"]').forEach(r => {
+                    r.addEventListener('change', e => { responses[currentIndex] = parseInt(e.target.value); });
+                });
+            }
+
+            // ==================== QUESTION NAVIGATION ====================
+            function refreshQuestion() {
+                const q = questions[currentIndex];
+                domainBadge.innerHTML = `<i class="fas ${q.icon}"></i> ${q.domain}`;
+                questionText.innerText = q.text;
+                renderLikert(responses[currentIndex]);
+
+                const pct = ((currentIndex + 1) / questions.length) * 100;
+                progressFill.style.width = `${pct}%`;
+                counterEl.innerText = `Question ${currentIndex + 1} of ${questions.length}`;
+
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.innerHTML = currentIndex === questions.length - 1
+                    ? 'Finish <i class="fas fa-check"></i>'
+                    : 'Next <i class="fas fa-arrow-right"></i>';
+            }
+
+            startBtn.addEventListener('click', () => {
+                demographics = {
+                    age: parseInt(document.getElementById('ageInput').value) || 25,
+                    gender: parseInt(document.getElementById('genderInput').value),
+                    education: parseInt(document.getElementById('educationInput').value),
+                    married: parseInt(document.getElementById('marriedInput').value)
+                };
+                demoSection.classList.add('hidden');
+                questionnaireSection.classList.remove('hidden');
+                progressSection.classList.remove('hidden');
+                refreshQuestion();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentIndex < questions.length - 1) {
+                    currentIndex++;
+                    refreshQuestion();
+                } else {
+                    showCompletion();
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    refreshQuestion();
+                }
+            });
+
+            function showCompletion() {
+                questionnaireSection.classList.add('hidden');
+                progressSection.classList.add('hidden');
+                completionSection.classList.remove('hidden');
+            }
+
+            // ==================== SUBMIT ====================
+            submitBtn.addEventListener('click', async () => {
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating Forecast...';
+                submitBtn.disabled = true;
+
+                const randomValue = Math.random();
+                const medicalRecord = Math.random();
+
+                const payload = {
+                    answers: responses,
+                    age: demographics.age,
+                    gender: demographics.gender,
+                    education: demographics.education,
+                    married: demographics.married,
+                    aleatoire: randomValue,
+                    medical_record: medicalRecord
+                };
+
+                try {
+                    const res = await fetch('http://127.0.0.1:5000/api/predict', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!res.ok) throw new Error('API error');
+                    const data = await res.json();
+
+                    completionSection.classList.add('hidden');
+                    resultsSection.classList.remove('hidden');
+                    renderDashboard(data);
+                } catch (err) {
+                    console.error('Prediction error:', err);
+                    submitBtn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error — Try Again';
+                    submitBtn.disabled = false;
+                }
+            });
+
+            // ==================== DASHBOARD RENDERING ====================
+            function renderDashboard(data) {
+                renderScoreCards(data);
+                renderDepressionChart(data);
+                renderBurnoutChart(data);
+                renderRelapseGauge(data);
+                renderDistortionChart(data);
+                renderPreventionPlan(data);
+            }
+
+            function getSeverityClass(severity) {
+                const s = severity.toLowerCase().replace(' ', '-');
+                if (s === 'normal') return 'severity-normal';
+                if (s === 'mild') return 'severity-mild';
+                if (s === 'moderate') return 'severity-moderate';
+                if (s === 'severe') return 'severity-severe';
+                return 'severity-extremely-severe';
+            }
+
+            function renderScoreCards(data) {
+                const container = document.getElementById('scoreCards');
+                const categories = [
+                    { key: 'depression', label: 'Depression', color: 'var(--accent-rose)' },
+                    { key: 'anxiety', label: 'Anxiety', color: 'var(--accent-amber)' },
+                    { key: 'stress', label: 'Stress', color: 'var(--accent-purple)' }
+                ];
+                container.innerHTML = categories.map(c => `
+                    <div class="score-card">
+                        <div class="score-label">${c.label}</div>
+                        <div class="score-value" style="color:${c.color}">${data.scores[c.key]}</div>
+                        <span class="score-severity ${getSeverityClass(data.severity[c.key])}">${data.severity[c.key]}</span>
+                    </div>
+                `).join('');
+            }
+
+            function renderDepressionChart(data) {
+                const ctx = document.getElementById('depressionChart').getContext('2d');
+                const weeks = Array.from({ length: 12 }, (_, i) => `Week ${i + 1}`);
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: weeks,
+                        datasets: [{
+                            label: 'Projected Depression Score',
+                            data: data.depression_curve_12_weeks,
+                            borderColor: '#f43f5e',
+                            backgroundColor: 'rgba(244, 63, 94, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#f43f5e',
+                            pointRadius: 4,
+                            pointHoverRadius: 7,
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { color: '#8b92a8', font: { family: 'Inter' } } }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 42,
+                                grid: { color: 'rgba(255,255,255,0.05)' },
+                                ticks: { color: '#8b92a8', font: { family: 'Inter' } }
+                            },
+                            x: {
+                                grid: { color: 'rgba(255,255,255,0.05)' },
+                                ticks: { color: '#8b92a8', font: { family: 'Inter' } }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function renderBurnoutChart(data) {
+                const ctx = document.getElementById('burnoutChart').getContext('2d');
+                const weeks = Array.from({ length: 12 }, (_, i) => `Week ${i + 1}`);
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: weeks,
+                        datasets: [{
+                            label: 'Burnout Probability',
+                            data: data.burnout_probability_12_weeks,
+                            backgroundColor: data.burnout_probability_12_weeks.map(v =>
+                                v > 0.7 ? 'rgba(244, 63, 94, 0.7)' :
+                                    v > 0.4 ? 'rgba(245, 158, 11, 0.7)' :
+                                        'rgba(45, 212, 191, 0.7)'
+                            ),
+                            borderRadius: 6,
+                            borderSkipped: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { color: '#8b92a8', font: { family: 'Inter' } } }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 1,
+                                grid: { color: 'rgba(255,255,255,0.05)' },
+                                ticks: {
+                                    color: '#8b92a8',
+                                    font: { family: 'Inter' },
+                                    callback: v => (v * 100) + '%'
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#8b92a8', font: { family: 'Inter' } }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function renderRelapseGauge(data) {
+                const el = document.getElementById('relapseValue');
+                el.innerText = (data.relapse_probability * 100).toFixed(1) + '%';
+            }
+
+            function renderDistortionChart(data) {
+                const ctx = document.getElementById('distortionChart').getContext('2d');
+                const labels = Object.keys(data.cognitive_distortions);
+                const values = Object.values(data.cognitive_distortions);
+                new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Distortion Intensity',
+                            data: values,
+                            backgroundColor: 'rgba(168, 85, 247, 0.15)',
+                            borderColor: '#a855f7',
+                            pointBackgroundColor: '#a855f7',
+                            pointBorderColor: '#a855f7',
+                            pointRadius: 4,
+                            pointHoverRadius: 7,
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { color: '#8b92a8', font: { family: 'Inter' } } }
+                        },
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 4,
+                                grid: { color: 'rgba(255,255,255,0.06)' },
+                                angleLines: { color: 'rgba(255,255,255,0.06)' },
+                                pointLabels: { color: '#8b92a8', font: { size: 11, family: 'Inter' } },
+                                ticks: { display: false }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function renderPreventionPlan(data) {
+                const list = document.getElementById('preventionList');
+                list.innerHTML = data.prevention_plan.map(item => `
+                    <li>
+                        <div class="prevention-domain">${item.domain}</div>
+                        <div class="prevention-recommendation">${item.recommendation}</div>
+                    </li>
+                `).join('');
+            }
+        })();
+    </script>
+</body>
+
+</html>
